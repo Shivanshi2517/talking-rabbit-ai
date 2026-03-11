@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
 
 st.set_page_config(page_title="Talking Rabbit AI", page_icon="🐰", layout="wide")
 
@@ -160,31 +159,11 @@ if uploaded_file:
     # ---------- Bar Chart ----------
     st.subheader("📈 Revenue by Region")
 
-    fig, ax = plt.subplots(figsize=(5,3))
+    region_data = df.groupby("Region")["Revenue"].sum()
 
-    df.groupby("Region")["Revenue"].sum().plot(
-        kind="bar",
-        color=["red","yellow","green","orange"],
-        ax=ax
-    )
+    st.bar_chart(region_data)
 
-    ax.set_ylabel("Revenue")
-    ax.set_xlabel("Region")
+    # ---------- Revenue Summary ----------
+    st.subheader("📊 Revenue Summary")
 
-    st.pyplot(fig)
-
-    # ---------- Pie Chart ----------
-    st.subheader("🥧 Revenue Distribution")
-
-    fig2, ax2 = plt.subplots(figsize=(4,4))
-
-    df.groupby("Region")["Revenue"].sum().plot(
-        kind="pie",
-        autopct='%1.1f%%',
-        colors=["red","yellow","green","orange"],
-        ax=ax2
-    )
-
-    ax2.set_ylabel("")
-
-    st.pyplot(fig2)
+    st.dataframe(region_data.reset_index())
